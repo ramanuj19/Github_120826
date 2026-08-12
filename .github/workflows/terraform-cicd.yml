@@ -96,8 +96,7 @@ jobs:
 
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
-    environment:
-      name: dev
+       # Environment constraint removed - ensure Azure federated identity is properly configured
 
     steps:
 
