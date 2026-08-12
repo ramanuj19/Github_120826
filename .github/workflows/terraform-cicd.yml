@@ -17,6 +17,7 @@ permissions:
   pull-requests: write
 
 env:
+  TF_WORKING_DIR: environment/dev
   ARM_USE_OIDC: true
   ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
@@ -24,8 +25,14 @@ env:
 
 jobs:
 
-  terraform-check:
-    name: Terraform Validate and Plan
+  # ==========================================================
+  # TERRAFORM PLAN
+  # Runs for Pull Request and Push to main
+  # ==========================================================
+  terraform-plan:
+
+    name: Terraform Plan
+
     runs-on: ubuntu-latest
 
     steps:
@@ -44,35 +51,48 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Version
+        working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform version
 
       - name: Terraform Format Check
+        working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform fmt -check -recursive
 
       - name: Terraform Init
+        working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform init
 
       - name: Terraform Validate
+        working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform validate
 
       - name: Terraform Plan
+        working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform plan -out=tfplan
 
       - name: Upload Terraform Plan
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-artifact@v4
         with:
           name: terraform-plan
-          path: tfplan
+          path: environment/dev/tfplan
 
 
+  # ==========================================================
+  # TERRAFORM APPLY
+  # Runs ONLY after merge to main
+  # Production environment approval is required
+  # ==========================================================
   terraform-apply:
+
     name: Terraform Apply
+
     runs-on: ubuntu-latest
 
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-
     needs:
-      - terraform-check
+      - terraform-plan
+
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     environment:
       name: dev
@@ -93,7 +113,15 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
+        working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform init
 
+      - name: Download Terraform Plan
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform-plan
+          path: environment/dev
+
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform apply -auto-approve tfplan
