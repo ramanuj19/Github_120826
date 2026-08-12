@@ -1,5 +1,4 @@
 variable "vnet" {
-  
 }
 resource "azurerm_virtual_network" "virtualnetwork" {
   for_each = var.vnet
