@@ -75,7 +75,7 @@ jobs:
       - terraform-check
 
     environment:
-      name: production
+      name: dev
 
     steps:
 
