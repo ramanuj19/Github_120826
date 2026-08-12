@@ -1,4 +1,4 @@
-module "resorce_group" {
+module "resource_group" {
   source = "../../module/azurerm_resource_group"
   rgs    = var.rgs
 }
@@ -6,7 +6,7 @@ module "resorce_group" {
 module "vnet" {
   source     = "../../module/azurerm_virtual_network"
   vnet       = var.vnet
-  depends_on = [module.resorce_group]
+  depends_on = [module.resource_group]
 }
 
 module "subnet" {
