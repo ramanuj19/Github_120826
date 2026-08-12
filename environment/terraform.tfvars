@@ -13,7 +13,6 @@ rgs = {
       environment = "dev-1"
     }
   }
-
 }
 vnet = {
   vnet1 = {
