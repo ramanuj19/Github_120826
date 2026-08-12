@@ -1,25 +1,33 @@
 rgs = {
-    rg1 = {
-        rg_name = "dev-rg"
-        rg_location = "Central India"
-        tags = {
-            environment ="dev"
-        }
+  rg1 = {
+    rg_name     = "dev-rg"
+    rg_location = "Central India"
+    tags = {
+      environment = "dev"
     }
+  }
+  rg2 = {
+    rg_name     = "dev-rg-2"
+    rg_location = "Central India"
+    tags = {
+      environment = "dev-1"
+    }
+  }
+
 }
 vnet = {
-    vnet1 = {
-        vnet_name = "dev-vnet1"
-        rg_name = "dev-rg"
-        rg_location = "Central India"
-        address_space = ["10.0.0.0/16"]
-    }
+  vnet1 = {
+    vnet_name     = "dev-vnet1"
+    rg_name       = "dev-rg"
+    rg_location   = "Central India"
+    address_space = ["10.0.0.0/16"]
+  }
 }
 subnets = {
-    subnet1 = {
-        sub_name = "frontend-dev-subnet"
-        vnet_name = "dev-vnet1"
-        rg_name = "dev-rg"
-        address_prefixes = ["10.0.1.0/24"]
-    }
+  subnet1 = {
+    sub_name         = "frontend-dev-subnet"
+    vnet_name        = "dev-vnet1"
+    rg_name          = "dev-rg"
+    address_prefixes = ["10.0.1.0/24"]
+  }
 }
