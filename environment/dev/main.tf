@@ -10,7 +10,7 @@ module "vnet" {
 }
 
 module "subnet" {
-  source  = "../../module/azurerm_subnet"
-  subnets = var.subnets
+  source     = "../../module/azurerm_subnet"
+  subnets    = var.subnets
   depends_on = [module.vnet]
 }
