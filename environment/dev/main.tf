@@ -8,7 +8,7 @@ module "vnet" {
   vnet       = var.vnet
   depends_on = [module.resorce_group]
 }
-{
+module "subnet" {
 source     = "../../module/azurerm_subnet"
 subnets    = var.subnets
 depends_on = [module.vnet]
